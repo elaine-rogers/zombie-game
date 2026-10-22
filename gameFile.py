@@ -1171,7 +1171,13 @@ def main():
         #create location handler and update location
         lochandler = getattr(Location, location)
         location = lochandler()
-    print(f"{bcolors.OKBLUE}Final inventory: {inventory}{bcolors.ENDC}")
+    print(f"{bcolors.OKBLUE}Final inventory:{bcolors.ENDC}")
+    for item in inventory:
+         print(f"{item}: {inventory[item].quantity}")
+    try:
+         print(f"Equiped Weapon: {equipedWeapon}")
+    except AttributeError:
+         print("No equipped Weapon")
     print(f"{bcolors.OKBLUE}Final Zombie Count {zombieNumber}{bcolors.ENDC}")
 
 if __name__ == "__main__":
