@@ -16,8 +16,7 @@ health = 500
 zombieNumber = random.randint(200, 350)
 zombieGroup = []
 equipedWeapon = None
-
-#CHECK TO MAKE SURE PUSH WORKS
+random.seed()
 
 class bcolors:
     
@@ -33,7 +32,8 @@ class bcolors:
 #inventory = {item: {quantity: number}}
 
 #grab something and put it into the inventory
-def putInventory(inventory, item, quant): 
+def putInventory(item, quant): 
+    global inventory
     if item.name in inventory:
         inventory[item.name].quantity += quant
     else:
@@ -41,14 +41,16 @@ def putInventory(inventory, item, quant):
         inventory[item.name] = item
 
 #remove something from the inventory
-def removeInventory(inventory, item, quant): 
+def removeInventory(item, quant): 
+        global inventory
         if inventory[item.name].quantity <= quant:
              inventory.pop(item)
         else:
             inventory[item.name].quantity -= quant
 
 #equips something from the inventory onto the player
-def equipItem(inventory, equipedArmor, equipedWeapon):
+def equipItem():
+    global inventory, equipedArmor, equipedWeapon
     try:
         itemIndex = int(input(f"Which item do you want to equip?"))
     except ValueError:
@@ -70,7 +72,8 @@ def equipItem(inventory, equipedArmor, equipedWeapon):
             return equipedWeapon, equipedArmor
 
 #loots the location and adds it to the inventory
-def looting(inventory, lootTable, increments):
+def looting(lootTable):
+    global inventory
     if len(lootTable) == 0:
             print("There is nothing to take")
             return 0
@@ -111,223 +114,221 @@ class Item:
         self.quantity = 1
 
 #name, item type, damage, damage type, protection
-def lootFood():
-    if random.random() < 0.5:
+def lootFood(randNum):
+    if randNum < 0.5:
         return Item("Canned Food", "Food", "None", 0, 0)
-    if random.random() < 0.8:
+    if randNum < 0.8:
         return Item("Bread", "Food", "None", 0, 0)
-    if random.random() < 0.9:
+    if randNum < 0.9:
         return Item("Meat", "Food", "None", 0, 0)
     return Item("Cake", "Food", "None", 0, 0)
         
 #loot for class Kitchen Utensil 2 means weapons
-def lootKitchenUtensil():
-    if random.random() < 0.9:
+def lootKitchenUtensil(randNum):
+    if randNum < 0.9:
         return Item("Rolling Pin", "Weapon", "Blunt", 5, 0)
-    if random.random() < 0.8:
+    if randNum < 0.8:
         return Item("Pan", "Weapon", "Blunt", 10, 0)
-    if random.random() < 0.5:
+    if randNum < 0.5:
         return Item("Knife", "Weapon", "Slash", 20, 0)
     return Item("Pipe Wrench", "Weapon", "Blunt", 30, 0)
     
 #loot for class Electronics. 3 means electronics
-def lootElectronics():
-    if random.random() < 0.8:
+def lootElectronics(randNum):
+    if randNum < 0.8:
         return Item("Radio", "Electronics", "None", 0, 0)
-    if random.random() < 0.5:
+    if randNum < 0.5:
         return Item("Laptop", "Electronics", "None", 0, 0)
     return Item("Phone", "Electronics", "None", 0, 0)
 
 #loot for class sheets. 4 means sheets
-def lootSheets():
-    if random.random() < 0.7:
+def lootSheets(randNum):
+    if randNum < 0.7:
         return ("Pillow", "Sheets", "None", 0, 0)
     return ("Blanket", "Sheets", "None", 0, 0)
 
 #loot for class cleaning supplies. 5 means cleaning supplies
-def lootCleaningSupplies():
-    if random.random() < 0.8:
+def lootCleaningSupplies(randNum):
+    if randNum < 0.8:
         return Item("Soap", "Cleaning Supplies", "None", 0, 0)
-    if random.random() < 0.5:
+    if randNum < 0.5:
         return Item("Cleaning Spray", "None", "Cleaning Supplies", 0, 0)
     return Item("Bleach", "Cleaning Supplies", "None", 0, 0)
 
 #loot for class medical supplies. 6 means medical supplies
-def lootMedicalSupplies():
-    if random.random() < 0.8:
+def lootMedicalSupplies(randNum):
+    if randNum < 0.8:
         return Item("Bandages", "Medical Supplies", "None", 0, 0)
-    if random.random() < 0.5:
+    if randNum < 0.5:
         return Item("Painkillers", "Medical Supplies", "None", 0, 0)
     return Item("Antibiotics", "Medical Supplies", "None", 0, 0)
 
 #loot for class weapons. 2 means weapons
-def lootWeapons():
-    if random.random() < 0.8:
+def lootWeapons(randNum):
+    if randNum < 0.8:
         return Item("Baseball Bat", "Weapon", "Blunt", 25, 0)
-    if random.random() < 0.5:
+    if randNum < 0.5:
         return Item("Crowbar", "Weapon", "Blunt", 35, 0)
     return Item("Machete", "Weapon", "Blunt", 50, 0)
 
 #loot for class shovels. Offshoot of weapons
-def lootShovels():
-    if random.random() < 0.8:
+def lootShovels(randNum):
+    if randNum < 0.8:
         return Item("Spade", "Weapon", "Slash", 10, 0)
-    if random.random() < 0.5:
+    if randNum < 0.5:
         return Item("Garden Shovel", "Weapon", "Blunt", 20, 0)
     return Item("Snow Shovel", "Weapon", "Blunt", 20, 0)
 
 #loot for toys. 8 means toys
-def lootToys():
-    if random.random() < 0.8:
+def lootToys(randNum):
+    if randNum < 0.8:
         return Item("Doll", "Toy", "None", 0, 0)
-    if random.random() < 0.5:
+    if randNum < 0.5:
         return Item("Toy Car", "Toy", "None", 0, 0)
-    if random.random() < 0.3:
+    if randNum < 0.3:
         return Item("Rubiks Cube", "Toy", "None", 0, 0)
     return Item("Baseball Bat", "Weapon", "None", 25, 0)
 
 #loot for backpacks. 9 means backpacks
-def lootBackpacks():
-    if random.random() < 0.8:
+def lootBackpacks(randNum):
+    if randNum < 0.8:
         return Item("School Backpack", "Backpack", "None", 0, 0)
-    if random.random() < 0.5:
+    if randNum < 0.5:
         return Item("Hiking Backpack", "Backpack", "None", 0, 0)
     return Item("Duffle Bag", "Backpack", "None", 0, 0)
 
 #loot for stationary. 10 means stationary
-def lootStationary():
-    if random.random() < 0.5:
+def lootStationary(randNum):
+    if randNum < 0.5:
         return Item("Notebook", "Stationary", "None", 0, 0)
-    if random.random() < 0.3:
+    if randNum < 0.3:
         return Item("Pencil", "Stationary", "None", 0, 0)
-    if random.random() < 0.3:
+    if randNum < 0.3:
         return Item("Black Pen", "Stationary", "None", 0, 0)
-    if random.random() < 0.3:
+    if randNum < 0.3:
         return Item("Blue Pen", "Stationary", "None", 0, 0)
     return Item("Red Pen", "Stationary", "None", 0, 0)
 
 #loot for guns. Subsection of weapons
-def lootGuns():
-    if random.random() < 0.7:
+def lootGuns(randNum):
+    if randNum < 0.7:
         return Item("Pistol", "Weapon", "Shot", 60, 0)
-    if random.random() < 0.5:
+    if randNum < 0.5:
         return Item("Rifle", "Weapon", "Shot", 90, 0)
     return Item("Shotgun", "Weapon", "Shot", 120, 0)
 
-def lootArmor():
-    if random.random() < 0.3:
+def lootArmor(randNum):
+    if randNum < 0.3:
         return Item("Shin and Knee Gaurds", "Armor", "None", 0, 10)
-    if random.random() < 0.3:
+    if randNum < 0.3:
         return Item("Arm Gaurds", "Armor", "None", 0, 10)
-    if random.random() < 0.3:
+    if randNum < 0.3:
         return Item("Bullet Proof Vest", "Armor", "None", 0, 30)
-    if random.random() < 0.3:
+    if randNum < 0.3:
         return Item("Riot Helmet", "Armor", "None", 0, 20)
     return Item("Riot Sheild", "Armor", "None", 0, 20)      
             
 #Loot table for different areas
 def lootTable(area):
+    randNum = random.random()
     if area == "kitchen":
-        if random.random() < 0.1:
+        if randNum < 0.1:
             return lootKitchenUtensil()
         return lootFood()
     elif area == "baseLivingRoom":
         return lootElectronics()
     elif area == "bedroom":
-        if(random.random() < 0.1):
+        if(randNum < 0.1):
             return lootElectronics()
         return lootSheets()
     elif area == "bathroom":
-        if random.random() < 0.7:
+        if randNum < 0.7:
             return lootCleaningSupplies()
         return lootMedicalSupplies()
     elif area == "trailerInsideCabinets":
-        if random.random() < 0.7:
+        if randNum < 0.3:
             return lootFood()
-        if random.random() < 0.5:
+        if randNum < 0.6:
             return lootKitchenUtensil()
-        if random.random() < 0.3:
+        if randNum < 0.8:
             return lootCleaningSupplies()
-        if random.random() < 0.1:
+        if randNum < 0.9:
             return lootMedicalSupplies()
-        if random.random() < 0.1:
-            return lootKitchenUtensil()
         return lootWeapons()
     elif area == "playgroundMonkeyGym":
-        if random.random() < 0.9:
+        if randNum < 0.9:
             return lootToys()
         return lootBackpacks()
     elif area == "playgroundSandbox":
-        if random.random() < 0.9:
+        if randNum < 0.8:
             return lootToys()
-        if random.random() < 0.5:
+        if randNum < 0.9:
             return lootShovels()
         return lootBackpacks()
     elif area == "trails":
-        if random.random() < 0.05:
+        if randNum < 0.05:
             return lootFood()
-        if random.random() < 0.05:
+        if randNum < 0.15:
             return lootKitchenUtensil()
-        if random.random() < 0.05:
+        if randNum < 0.25:
             return lootElectronics()
-        if random.random() < 0.05:
+        if randNum < 0.35:
             return lootSheets()
-        if random.random() < 0.05:
+        if randNum < 0.45:
             return lootCleaningSupplies()
-        if random.random() < 0.05:
+        if randNum < 0.55:
             return lootMedicalSupplies()
-        if random.random() < 0.05:
+        if randNum < 0.65:
             return lootWeapons()
-        if random.random() < 0.05:
+        if randNum < 0.75:
             return lootToys()
-        if random.random() < 0.05:
+        if randNum < 0.85:
             return lootBackpacks()
-        if random.random() < 0.05:
+        if randNum < 0.95:
             return lootStationary()
         return None
     elif area == "reception":
-        if random.random() < 0.9:
+        if randNum < 0.9:
             return lootStationary()
         return lootElectronics()
     elif area == "medicalRoom":
         return lootMedicalSupplies()
     elif area == "breakRoom":
-        if random.random() < 0.5:
+        if randNum < 0.5:
             return lootFood()
-        if random.random() < 0.3:
+        if randNum < 0.8:
             return lootElectronics()
         return lootStationary()
     elif area == "apartment":
-        if random.random() < 0.05:
+        if randNum < 0.05:
             return lootFood()
-        if random.random() < 0.05:
+        if randNum < 0.15:
             return lootKitchenUtensil()
-        if random.random() < 0.05:
+        if randNum < 0.25:
             return lootElectronics()
-        if random.random() < 0.05:
+        if randNum < 0.35:
             return lootSheets()
-        if random.random() < 0.05:
+        if randNum < 0.45:
             return lootCleaningSupplies()
-        if random.random() < 0.05:
+        if randNum < 0.55:
             return lootMedicalSupplies()
-        if random.random() < 0.05:
+        if randNum < 0.65:
             return lootWeapons()
-        if random.random() < 0.05:
+        if randNum < 0.75:
             return lootToys()
-        if random.random() < 0.05:
+        if randNum < 0.85:
             return lootShovels()
-        if random.random() < 0.05:
+        if randNum < 0.95:
             return lootBackpacks()
-        if random.random() < 0.05:
-            return lootStationary()
+        return lootStationary()
     elif area == "policeLockerRoom":
-        if random.random() < 0.5:
+        if randNum < 0.3:
             return lootFood()
-        if random.random() < 0.5:
+        if randNum < 0.6:
             return lootGuns()
         return lootArmor()
     elif area == "policeArmory":
-        if random.random() < 0.5:
+        if randNum < 0.5:
             return lootGuns()
         return lootArmor()
 
