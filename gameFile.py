@@ -84,7 +84,7 @@ def looting(lootTable):
     desination = input(f"{bcolors.WARNING}What do you want to do?{bcolors.ENDC}")
     if desination == "1":
         for loot in lootTable:
-            putInventory(inventory, loot, 1)
+            putInventory(loot, 1)
         lootTable.clear()
         return 0
     if desination == "2":
@@ -92,7 +92,7 @@ def looting(lootTable):
             print(f"{i+1}. {lootTable[i].name}")
         itemIndex = int(input(f"{bcolors.WARNING}Which item do you want to take?{bcolors.ENDC}")) - 1
         if itemIndex < len(lootTable):
-            putInventory(inventory, lootTable[itemIndex], 1)
+            putInventory(lootTable[itemIndex], 1)
             lootTable.pop(itemIndex)
             return 0
     elif desination == "3":
@@ -513,6 +513,7 @@ class Location:
 
     def baseKitchen():
         global inventory, lootedBaseKitchen
+        kitchen = []
         print(f"{bcolors.OKBLUE}You are in the kitchen.{bcolors.ENDC}")
         print("1. Go back to the hallway")
         print("2. Search the kitchen")
