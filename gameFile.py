@@ -14,7 +14,6 @@ suburbsBathroomCounter = random.randint(1, 3)
 inventory = equipedArmor = {}
 health = 500
 zombieNumber = random.randint(200, 350)
-zombieGroup = []
 equipedWeapon = None
 random.seed()
 
@@ -400,8 +399,8 @@ def damage(difficulty):
     if difficulty == "hard":
         return random.randint(20, 60)
 
-def fightingMiniGame(difficulty, zombieGroup, equipedWeapon, equipedArmor):
-    global health, zombieNumber
+def fightingMiniGame(difficulty, zombieGroup):
+    global health, zombieNumber, equipedWeapon, equipedArmor
     while (health > 0 and zombieGroup):
         printDamage = []
         block = 0
@@ -462,7 +461,7 @@ def fightingMiniGame(difficulty, zombieGroup, equipedWeapon, equipedArmor):
 #                               Location Maker                                  #
 #-------------------------------------------------------------------------------#
 class Location:
-    def base(mainInventory, equipedWeapon, equipedArmor):
+    def base():
         if not visitedBase:
             print(f"{bcolors.OKBLUE}You are in a small cabin on the outskirts of town.{bcolors.ENDC}")
             visitedBase = True
@@ -490,9 +489,9 @@ class Location:
             return "baseBathroom"
         return "base"
         
-    def outsideBase(mainInventory, equipedWeapon, equipedArmor):
+    def outsideBase():
         if random.random() < 0.1:
-            fightingMiniGame("easy", zombieGroup("easy"), equipedWeapon, equipedArmor)
+            fightingMiniGame("easy", zombieGroup("easy"))
         print(f"{bcolors.OKBLUE}You are outside the base.{bcolors.ENDC}")
         print("1. Go back to the base")
         print("2. Go to Trailer Park")
@@ -509,7 +508,8 @@ class Location:
             return "park"
         return "outsideBase"
 
-    def baseKitchen(mainInventory, equipedWeapon, equipedArmor):
+    def baseKitchen():
+        global inventory
         print(f"{bcolors.OKBLUE}You are in the kitchen.{bcolors.ENDC}")
         print("1. Go back to the hallway")
         print("2. Search the kitchen")
@@ -523,14 +523,15 @@ class Location:
             if not lootedBaseKitchen:
                 lootedBaseKitchen = True
                 kitchen = [lootTable("kitchen"), lootTable("kitchen"), lootTable("kitchen")]
-            looting(mainInventory, kitchen, 0)
+            looting(inventory, kitchen, 0)
             return "baseKitchen"
         elif desination == "3":
             print(f"{bcolors.FAIL} FINISH COOKING LATER {bcolors.ENDC}")
             return "baseKitchen"
         return "baseKitchen"
         
-    def baseLivingRoom(mainInventory, equipedWeapon, equipedArmor):
+    def baseLivingRoom():
+        global inventory
         print(f"{bcolors.OKBLUE}You are in the living room.{bcolors.ENDC}")
         print("1. Go back to the hallway")
         print("2. Search the living room")
@@ -544,14 +545,14 @@ class Location:
             if not lootedBaseLivingRoom:
                 lootedBaseLivingRoom = True
                 livingRoom = [lootTable("baseLivingRoom"), lootTable("baseLivingRoom")]
-            looting(mainInventory, livingRoom, 0)
+            looting(inventory, livingRoom, 0)
             return "baseLivingRoom"
         elif desination == "3":
             print(f"{bcolors.FAIL} FINISH WATCHING TV LATER {bcolors.ENDC}")
             return "baseLivingRoom"
         return "baseLivingRoom"
         
-    def baseBedroom(mainInventory, equipedWeapon, equipedArmor):
+    def baseBedroom():
         print(f"{bcolors.OKBLUE}You are in the bedroom.{bcolors.ENDC}")
         print("1. Go back to the hallway")
         print("2. Search the bedroom")
@@ -565,14 +566,14 @@ class Location:
             if not lootedBaseBedroom:
                 lootedBaseBedroom = True
                 bedroom = [lootTable("bedroom"), lootTable("bedroom"), lootTable("bedroom")]
-            looting(mainInventory, bedroom, 0)
+            looting(inventory, bedroom, 0)
             return "baseBedroom"
         elif desination == "3":
             print(f"{bcolors.FAIL} FINISH SLEEP LATER {bcolors.ENDC}")
             return "baseBedroom"
         return "baseBedroom"
 
-    def baseBathroom(mainInventory, equipedWeapon, equipedArmor):
+    def baseBathroom():
         print(f"{bcolors.OKBLUE}You are in the bathroom.{bcolors.ENDC}")
         print("1. Go back to the hallway")
         print("2. Search the bathroom")
@@ -586,16 +587,16 @@ class Location:
             if not lootedBaseBathroom:
                 lootedBaseBathroom = True
                 bathroom = [lootTable("bathroom"), lootTable("bathroom")]
-            looting(mainInventory, bathroom, 0)
+            looting(inventory, bathroom, 0)
             return "baseBathroom"
         elif desination == "3":
             print(f"{bcolors.FAIL} FINISH SHOWERING LATER {bcolors.ENDC}")
             return "baseBathroom"
         return "baseBathroom"
 
-    def park(mainInventory, equipedWeapon, equipedArmor):
+    def park():
         if random.random() < 0.1:
-            fightingMiniGame("easy", zombieGroup("easy"), equipedWeapon, equipedArmor)
+            fightingMiniGame("easy", zombieGroup("easy"))
         print(f"{bcolors.OKBLUE}You are in the park.{bcolors.ENDC}")
         print("1. Go back to the base")
         print("2. Go to the Suburbs")
@@ -620,9 +621,10 @@ class Location:
             return "pavilion"
         return "park"
         
-    def playground(mainInventory, equipedWeapon, equipedArmor):
+    def playground():
+        global inventory
         if random.random() < 0.1:
-            fightingMiniGame("easy", zombieGroup("easy"), equipedWeapon, equipedArmor)
+            fightingMiniGame("easy", zombieGroup("easy"))
         print(f"{bcolors.OKBLUE}You are in the playground.{bcolors.ENDC}")
         print("1. Go back to the park")
         print("2. Go to the monkey gym")
@@ -636,20 +638,21 @@ class Location:
             if not lootedPlaygroundMonkeyGym:
                 lootedPlaygroundMonkeyGym = True
                 monkeyGym = [lootTable("playgroundMonkeyGym"), lootTable("playgroundMonkeyGym")]
-            looting(mainInventory, monkeyGym, 0)
+            looting(inventory, monkeyGym, 0)
             return "playground"
         elif desination == "3":
             print(f"{bcolors.OKBLUE}You go to the sandbox.{bcolors.ENDC}")
             if not lootedPlaygroundSandbox:
                 lootedPlaygroundSandbox = True
                 sandbox = [lootTable("playgroundSandbox"), lootTable("playgroundSandbox")]
-            looting(mainInventory, sandbox, 0)
+            looting(inventory, sandbox, 0)
             return "playground"
         return "playground"
 
-    def trails(mainInventory, equipedWeapon, equipedArmor):
+    def trails():
+        global inventory
         if random.random() < 0.1:
-            fightingMiniGame("easy", zombieGroup("easy"), equipedWeapon, equipedArmor)
+            fightingMiniGame("easy", zombieGroup("easy"))
         print(f"{bcolors.OKBLUE}You are on the trails.{bcolors.ENDC}")
         print("1. Go back to the park")
         print("2. Forage")
@@ -659,13 +662,13 @@ class Location:
             return "park"
         elif desination == "2":
             print(f"{bcolors.OKBLUE}You find:{bcolors.ENDC}")
-            looting(mainInventory, [lootTable("trails"), lootTable("trails"), lootTable("trails")], 0)
+            looting(inventory, [lootTable("trails"), lootTable("trails"), lootTable("trails")], 0)
             return "trails"
         return "trails"
 
-    def pavilion(mainInventory, equipedWeapon, equipedArmor):
+    def pavilion():
         if random.random() < 0.1:
-            fightingMiniGame("easy", zombieGroup("easy"), equipedWeapon, equipedArmor)
+            fightingMiniGame("easy", zombieGroup("easy"))
         print(f"{bcolors.OKBLUE}You are in the pavilion.{bcolors.ENDC}")
         print("1. Go back to the park")
         print("2. Search the pavilion")
@@ -676,16 +679,16 @@ class Location:
             return "park"
         elif desination == "2":
             print(f"{bcolors.OKBLUE}You find:{bcolors.ENDC}")
-            looting(mainInventory,[ lootTable("trails"), lootTable("trails"), lootTable("trails")], 0)
+            looting(inventory,[ lootTable("trails"), lootTable("trails"), lootTable("trails")], 0)
             return "pavilion"
         elif desination == "3":
             print(f"{bcolors.FAIL} FINISH COOKING LATER {bcolors.ENDC}")
             return "pavilion"
         return "pavilion"
 
-    def trailerPark(mainInventory, equipedWeapon, equipedArmor):
+    def trailerPark():
         if random.random() < 0.1:
-            fightingMiniGame("easy", zombieGroup("easy"), equipedWeapon, equipedArmor)
+            fightingMiniGame("easy", zombieGroup("easy"))
         print(f"{bcolors.OKBLUE}You are in the trailer park.{bcolors.ENDC}")
         print("1. Go back to the base")
         print("2. Go to the suburbs")
@@ -702,9 +705,10 @@ class Location:
             return "trailerInside"
         return "trailerPark"
 
-    def trailerInside(mainInventory, equipedWeapon, equipedArmor):
+    def trailerInside():
+        global inventory
         if random.random() < 0.1:
-            fightingMiniGame("easy", zombieGroup("easy"), equipedWeapon, equipedArmor)
+            fightingMiniGame("easy", zombieGroup("easy"))
         if lootedTrailerCabinets and lootedTrailerLoft and lootedTrailerBathroom and leftTrailer:
             trailerCounter += 1
             lootedTrailerCabinets = False
@@ -730,27 +734,27 @@ class Location:
             if not lootedTrailerCabinets:
                 lootedTrailerCabinets = True
                 trailerCabinets = [lootTable("trailerInsideCabinets"), lootTable("trailerInsideCabinets"), lootTable("trailerInsideCabinets")]
-            looting(mainInventory, trailerCabinets, 0)
+            looting(inventory, trailerCabinets, 0)
             return "trailerInside"
         elif desination == "3":
             print(f"{bcolors.OKBLUE}You search the loft.{bcolors.ENDC}")
             if not lootedTrailerLoft:
                 lootedTrailerLoft = True
                 trailerBedroom = [lootTable("bedroom"), lootTable("bedroom"), lootTable("bedroom")]
-            looting(mainInventory, trailerBedroom, 0)
+            looting(inventory, trailerBedroom, 0)
             return "trailerInside"
         elif desination == "4":
             print(f"{bcolors.OKBLUE}You search the bathroom.{bcolors.ENDC}")
             if not lootedTrailerBathroom:
                 lootedTrailerBathroom = True
                 trailerBathroom = [lootTable("bathroom"), lootTable("bathroom"), lootTable("bathroom")]
-            looting(mainInventory, trailerBathroom, 0)
+            looting(inventory, trailerBathroom, 0)
             return "trailerInside"
         return "trailerInside"
 
-    def suburbs(mainInventory, equipedWeapon, equipedArmor):
+    def suburbs():
         if random.random() < 0.1:
-            fightingMiniGame("medium", zombieGroup("medium"), equipedWeapon, equipedArmor)
+            fightingMiniGame("medium", zombieGroup("medium"))
         print(f"{bcolors.OKBLUE}You are in the suburbs.{bcolors.ENDC}")
         print("1. Go to the Trailer Park")
         print("2. Go to the Park")
@@ -775,7 +779,7 @@ class Location:
             return "suburbsInside"
         return "suburbs"
 
-    def suburbsInside(mainInventory, equipedWeapon, equipedArmor):
+    def suburbsInside():
         if(lootedSuburbsKitchen and lootedSuburbsLivingRoom and lootedSuburbsMasterBedroom 
         and lootedSuburbsBedroom and lootedSuburbsBathroom and leftSuburbs):
             suburbsCounter += 1
@@ -789,7 +793,7 @@ class Location:
             suburbsBathroomCounter = random.randint(1, 3)
         if leftSuburbs == False:
             if random.random() < 0.1:
-                fightingMiniGame("medium", zombieGroup("medium"), equipedWeapon, equipedArmor)
+                fightingMiniGame("medium", zombieGroup("medium"))
         print(f"{bcolors.OKBLUE}You are inside a house. You have searched {suburbsCounter} houses.{bcolors.ENDC}")
         if suburbsCounter >= 10:
             print(f"{bcolors.OKBLUE}You have looted all the houses.{bcolors.ENDC}")
@@ -818,10 +822,11 @@ class Location:
             return "suburbsBathroom"
         return "suburbsInside"
         
-    def suburbsKitchen(mainInventory, equipedWeapon, equipedArmor):
+    def suburbsKitchen():
+        global inventory
         if lootedSuburbsKitchen == False:
             if random.random() < 0.1:
-                fightingMiniGame("medium", zombieGroup("medium"), equipedWeapon, equipedArmor)
+                fightingMiniGame("medium", zombieGroup("medium"))
         print(f"{bcolors.OKBLUE}You are in the Kitchen.{bcolors.ENDC}")
         print("1. Go back to the hallway")
         print("2. Search the kitchen")
@@ -835,17 +840,18 @@ class Location:
             if not lootedSuburbsKitchen:
                 lootedSuburbsKitchen = True
                 suburbsKitchen = [lootTable("kitchen"), lootTable("kitchen"), lootTable("kitchen")]
-            looting(mainInventory, suburbsKitchen, 0)
+            looting(inventory, suburbsKitchen, 0)
             return "suburbsKitchen"
         elif desination == "3":
             print(f"{bcolors.FAIL} FINISH COOKING LATER {bcolors.ENDC}")
             return "suburbsKitchen"
         return "suburbsKitchen"
 
-    def suburbsLivingRoom(mainInventory, equipedWeapon, equipedArmor):
+    def suburbsLivingRoom():
+        global inventory
         if lootedSuburbsLivingRoom == False:
             if random.random() < 0.1:
-                fightingMiniGame("medium", zombieGroup("medium"), equipedWeapon, equipedArmor)
+                fightingMiniGame("medium", zombieGroup("medium"))
         print(f"{bcolors.OKBLUE}You are in the living room.{bcolors.ENDC}")
         print("1. Go back to the hallway")
         print("2. Search the living room")
@@ -859,17 +865,18 @@ class Location:
             if not lootedSuburbsLivingRoom:
                 lootedSuburbsLivingRoom = True
                 suburbsLivingRoom = [lootTable("baseLivingRoom"), lootTable("baseLivingRoom")]
-            looting(mainInventory, suburbsLivingRoom, 0)
+            looting(inventory, suburbsLivingRoom, 0)
             return "suburbsLivingRoom"
         elif desination == "3":
             print(f"{bcolors.FAIL} FINISH WATCHING TV LATER {bcolors.ENDC}")
             return "suburbsLivingRoom"
         return "suburbsLivingRoom"
 
-    def suburbsBedroom(mainInventory, equipedWeapon, equipedArmor):
+    def suburbsBedroom():
+        global inventory
         if lootedSuburbsBedroom == False:
             if random.random() < 0.1:
-                fightingMiniGame("medium", zombieGroup("medium"), equipedWeapon, equipedArmor)
+                fightingMiniGame("medium", zombieGroup("medium"))
         print(f"{bcolors.OKBLUE}You are in the hallway.{bcolors.ENDC}")
         print("1. Go back to the main hallway")
         print("2. Search the master bedroom")
@@ -890,7 +897,7 @@ class Location:
             if not lootedSuburbsMasterBedroom:
                 lootedSuburbsMasterBedroom = True
                 suburbsMasterBedroom = [lootTable("bedroom"), lootTable("bedroom"), lootTable("bedroom")]
-            looting(mainInventory, suburbsMasterBedroom, 0)
+            looting(inventory, suburbsMasterBedroom, 0)
             return "suburbsBedroom"
         elif desination >= "3":
             index = int(desination) - 3
@@ -899,17 +906,18 @@ class Location:
                 if not lootedSuburbsBedroom:
                     if lootedBedroomCounter[index] < 1:
                         suburbsBedroom = [lootTable("bedroom"), lootTable("bedroom"), lootTable("bedroom")]
-                increments = looting(mainInventory, suburbsBedroom, 0)
+                increments = looting(inventory, suburbsBedroom, 0)
                 if increments != 1:
                     lootedBedroomCounter[index] += 1
             elif index == suburbsBedroomCounter:
                 print(f"{bcolors.FAIL} FINISH SLEEPING LATER {bcolors.ENDC}")
         return "suburbsBedroom"
 
-    def suburbsBathroom(mainInventory, equipedWeapon, equipedArmor):
+    def suburbsBathroom():
+        global inventory
         if lootedSuburbsBathroom == False:
             if random.random() < 0.1:
-                fightingMiniGame("medium", zombieGroup("medium"), equipedWeapon, equipedArmor)
+                fightingMiniGame("medium", zombieGroup("medium"))
         print(f"{bcolors.OKBLUE}You are in the hallway.{bcolors.ENDC}")
         print("1. Go back to the main hallway")
         if suburbsBathroomIndex == False:
@@ -931,7 +939,7 @@ class Location:
                 if not lootedSuburbsBathroom:
                     if lootedBathroomCounter[index] < 1:
                         bathroom = [lootTable("bathroom"), lootTable("bathroom"), lootTable("bathroom")]
-                if looting(mainInventory, bathroom, 0) != "You take nothing.":
+                if looting(inventory, bathroom, 0) != "You take nothing.":
                     lootedBathroomCounter[index] += 1
                     return "suburbsBathroom"
             elif index == suburbsBathroomCounter:
@@ -939,9 +947,9 @@ class Location:
                 return "suburbsBathroom"
         return "suburbsBathroom"
 
-    def hospital(mainInventory, equipedWeapon, equipedArmor):
+    def hospital():
         if random.random() < 0.1:
-            fightingMiniGame("medium", zombieGroup("medium"), equipedWeapon, equipedArmor)
+            fightingMiniGame("medium", zombieGroup("medium"))
         print("You are in front of the hospital.")
         print("1. Go to the Suburbs")
         print("2. Go to the Police Station")
@@ -959,9 +967,10 @@ class Location:
         else:
             return "hospital"
         
-    def hospitalReception(mainInventory, equipedWeapon, equipedArmor):
+    def hospitalReception():
+        global inventory
         if random.random() < 0.1:
-                fightingMiniGame("medium", zombieGroup("medium"), equipedWeapon, equipedArmor)
+                fightingMiniGame("medium", zombieGroup("medium"))
         print("You are in the Hospital Reception Office.")
         print("1. Leave the Hospital ")
         print("2. Go to a Medical Room")
@@ -981,13 +990,14 @@ class Location:
             if lootedHospitalReceptionRooom == False:
                 reception = [lootTable("reception"), lootTable("reception"), lootTable("reception")]
                 lootedHospitalReceptionRooom = True
-            looting(mainInventory, reception, 0)
+            looting(inventory, reception, 0)
             return "hospitalReception"
         return "hospitalReception"
 
-    def medicalRoom(mainInventory, equipedWeapon, equipedArmor):
+    def medicalRoom():
+        global inventory
         if random.random() < 0.1:
-                fightingMiniGame("medium", zombieGroup("medium"), equipedWeapon, equipedArmor)
+                fightingMiniGame("medium", zombieGroup("medium"))
         print("You are in a Medical Room.")
         print("1. Leave the Medical Room")
         print("2. Search the Room")
@@ -996,13 +1006,14 @@ class Location:
             print("You leave the Medical Room.")
             return "hospital"
         if desination == "2":
-            looting(mainInventory, [lootTable("medicalRoom"), lootTable("medicalRoom"), lootTable("medicalRoom")], 0)
+            looting(inventory, [lootTable("medicalRoom"), lootTable("medicalRoom"), lootTable("medicalRoom")], 0)
             return "medicalRoom"
         return "medicalRoom"
 
-    def breakRoom(mainInventory, equipedWeapon, equipedArmor):
+    def breakRoom():
+        global inventory
         if random.random() < 0.1:
-                fightingMiniGame("medium", zombieGroup("medium"), equipedWeapon, equipedArmor)
+                fightingMiniGame("medium", zombieGroup("medium"))
         print("You are in the Break Room.")
         print("1. Leave the Break Room")
         print("2. Search the Break Room")
@@ -1013,13 +1024,13 @@ class Location:
         if desination == "2":
             if lootedHospitalBreakRoom == False:
                 breakRoom = [lootTable("breakRoom"), lootTable("breakRoom"), lootTable("breakRoom")]
-            looting(mainInventory, breakRoom, 0)
+            looting(inventory, breakRoom, 0)
             return "breakRoom"
         return "breakRoom"
 
-    def apartments(mainInventory, equipedWeapon, equipedArmor): 
+    def apartments(): 
         if random.random() < 0.1:
-                fightingMiniGame("medium", zombieGroup("medium"), equipedWeapon, equipedArmor)
+                fightingMiniGame("medium", zombieGroup("medium"))
         print("You are in front of the Apartments.")
         print("1. Go to the Suburbs")
         print("2. Go to the Police Station")
@@ -1034,7 +1045,8 @@ class Location:
         if desination == "3":
             return "apartmentsInside"
         
-    def apartmentsInside(mainInventory, equipedWeapon, equipedArmor):
+    def apartmentsInside():
+        global inventory
         print("You are inside the Apartment Complex.")
         print("1. Leave the Apartment Complex")
         print("2. Search an Apartment")
@@ -1044,11 +1056,11 @@ class Location:
             return "apartments"
         if desination == "2":
             print("You search an Apartment.")
-            looting(mainInventory, [lootTable("apartment"), lootTable("apartment"), lootTable("apartment")], 0)
+            looting(inventory, [lootTable("apartment"), lootTable("apartment"), lootTable("apartment")], 0)
             return "apartmentsInside"
         return "apartmentsInside"
 
-    def policeStation(mainInventory, equipedWeapon, equipedArmor):
+    def policeStation():
         print("You are in front of the Police Station.")
         print("1. Go to the Hospital")
         print("2. Go to the Apartments")
@@ -1064,7 +1076,7 @@ class Location:
             print("You go inside the Police Station.")
             return "policeStationInside"
 
-    def policeStationInside(mainInventory, equipedWeapon, equipedArmor):
+    def policeStationInside():
         print("You are in the Police Station Reception Office")
         print("1. Leave the Police Station")
         print("2. Go to the Locker Room")
@@ -1080,7 +1092,8 @@ class Location:
             print("You go to the Armory.")
             return "policeArmory"
 
-    def policeLockerRoom(mainInventory, equipedWeapon, equipedArmor):
+    def policeLockerRoom():
+        global inventory
         print("You are in the Locker Room.")
         print("1. Leave the Locker Room")
         print("2. Search the Locker Room")
@@ -1092,11 +1105,12 @@ class Location:
             if lootedPoliceLockerRoom == False:
                 lockerRoom = [lootTable("policeLockerRoom"), lootTable("policeLockerRoom"), lootTable("policeLockerRoom")]
                 lootedPoliceLockerRoom = True
-            looting(mainInventory, lockerRoom, 0)
+            looting(inventory, lockerRoom, 0)
             return "policeLockerRoom"
         return "policeLockerRoom"
 
-    def policeArmory(mainInventory, equipedWeapon, equipedArmor):
+    def policeArmory():
+        global inventory
         print("You are in the Armory.")
         print("1. Leave the Armory")
         print("2. Search the Armory")
@@ -1105,17 +1119,14 @@ class Location:
             print("You leave the Armory.")
             return "policeStationInside"
         if desination == "2":
-            looting(mainInventory, [lootTable("policeArmory"), lootTable("policeArmory"), lootTable("policeArmory")], 0)
+            looting(inventory, [lootTable("policeArmory"), lootTable("policeArmory"), lootTable("policeArmory")], 0)
             return "policeArmory"
         return "policeArmory"
 
-    def debug(mainInventory, equipedWeapon, equipedArmor):
-        global zombieGroup
-        if not zombieGroup:
-            zombieGroup = ZombieGroup("hard")
-            print(f"A group of {len(zombieGroup)} appears")
+    def debug():
+        global inventory
         print("DEBUG ZONE")
-        fightingMiniGame("easy", zombieGroup, equipedWeapon, equipedArmor)
+        fightingMiniGame("easy", zombieGroup("easy"))
         #looting(mainInventory, [lootTable("policeArmory"), lootTable("policeArmory"), lootTable("policeArmory")], 0)
         return "debug"
 
