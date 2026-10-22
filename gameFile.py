@@ -125,19 +125,19 @@ def lootFood(randNum):
         
 #loot for class Kitchen Utensil 2 means weapons
 def lootKitchenUtensil(randNum):
-    if randNum < 0.9:
+    if randNum < 0.5:
         return Item("Rolling Pin", "Weapon", "Blunt", 5, 0)
     if randNum < 0.8:
         return Item("Pan", "Weapon", "Blunt", 10, 0)
-    if randNum < 0.5:
+    if randNum < 0.9:
         return Item("Knife", "Weapon", "Slash", 20, 0)
     return Item("Pipe Wrench", "Weapon", "Blunt", 30, 0)
     
 #loot for class Electronics. 3 means electronics
 def lootElectronics(randNum):
-    if randNum < 0.8:
-        return Item("Radio", "Electronics", "None", 0, 0)
     if randNum < 0.5:
+        return Item("Radio", "Electronics", "None", 0, 0)
+    if randNum < 0.8:
         return Item("Laptop", "Electronics", "None", 0, 0)
     return Item("Phone", "Electronics", "None", 0, 0)
 
@@ -149,9 +149,9 @@ def lootSheets(randNum):
 
 #loot for class cleaning supplies. 5 means cleaning supplies
 def lootCleaningSupplies(randNum):
-    if randNum < 0.8:
-        return Item("Soap", "Cleaning Supplies", "None", 0, 0)
     if randNum < 0.5:
+        return Item("Soap", "Cleaning Supplies", "None", 0, 0)
+    if randNum < 0.8:
         return Item("Cleaning Spray", "None", "Cleaning Supplies", 0, 0)
     return Item("Bleach", "Cleaning Supplies", "None", 0, 0)
 
@@ -165,47 +165,47 @@ def lootMedicalSupplies(randNum):
 
 #loot for class weapons. 2 means weapons
 def lootWeapons(randNum):
-    if randNum < 0.8:
-        return Item("Baseball Bat", "Weapon", "Blunt", 25, 0)
     if randNum < 0.5:
+        return Item("Baseball Bat", "Weapon", "Blunt", 25, 0)
+    if randNum < 0.8:
         return Item("Crowbar", "Weapon", "Blunt", 35, 0)
     return Item("Machete", "Weapon", "Blunt", 50, 0)
 
 #loot for class shovels. Offshoot of weapons
 def lootShovels(randNum):
-    if randNum < 0.8:
-        return Item("Spade", "Weapon", "Slash", 10, 0)
     if randNum < 0.5:
+        return Item("Spade", "Weapon", "Slash", 10, 0)
+    if randNum < 0.8:
         return Item("Garden Shovel", "Weapon", "Blunt", 20, 0)
     return Item("Snow Shovel", "Weapon", "Blunt", 20, 0)
 
 #loot for toys. 8 means toys
 def lootToys(randNum):
-    if randNum < 0.8:
+    if randNum < 0.3:
         return Item("Doll", "Toy", "None", 0, 0)
     if randNum < 0.5:
         return Item("Toy Car", "Toy", "None", 0, 0)
-    if randNum < 0.3:
+    if randNum < 0.8:
         return Item("Rubiks Cube", "Toy", "None", 0, 0)
     return Item("Baseball Bat", "Weapon", "None", 25, 0)
 
 #loot for backpacks. 9 means backpacks
 def lootBackpacks(randNum):
-    if randNum < 0.8:
-        return Item("School Backpack", "Backpack", "None", 0, 0)
     if randNum < 0.5:
+        return Item("School Backpack", "Backpack", "None", 0, 0)
+    if randNum < 0.8:
         return Item("Hiking Backpack", "Backpack", "None", 0, 0)
     return Item("Duffle Bag", "Backpack", "None", 0, 0)
 
 #loot for stationary. 10 means stationary
 def lootStationary(randNum):
-    if randNum < 0.5:
+    if randNum < 0.6:
         return Item("Notebook", "Stationary", "None", 0, 0)
-    if randNum < 0.3:
+    if randNum < 0.7:
         return Item("Pencil", "Stationary", "None", 0, 0)
-    if randNum < 0.3:
+    if randNum < 0.8:
         return Item("Black Pen", "Stationary", "None", 0, 0)
-    if randNum < 0.3:
+    if randNum < 0.9:
         return Item("Blue Pen", "Stationary", "None", 0, 0)
     return Item("Red Pen", "Stationary", "None", 0, 0)
 
@@ -213,18 +213,18 @@ def lootStationary(randNum):
 def lootGuns(randNum):
     if randNum < 0.7:
         return Item("Pistol", "Weapon", "Shot", 60, 0)
-    if randNum < 0.5:
+    if randNum < 0.9:
         return Item("Rifle", "Weapon", "Shot", 90, 0)
     return Item("Shotgun", "Weapon", "Shot", 120, 0)
 
 def lootArmor(randNum):
-    if randNum < 0.3:
+    if randNum < 0.2:
         return Item("Shin and Knee Gaurds", "Armor", "None", 0, 10)
-    if randNum < 0.3:
+    if randNum < 0.4:
         return Item("Arm Gaurds", "Armor", "None", 0, 10)
-    if randNum < 0.3:
+    if randNum < 0.6:
         return Item("Bullet Proof Vest", "Armor", "None", 0, 30)
-    if randNum < 0.3:
+    if randNum < 0.8:
         return Item("Riot Helmet", "Armor", "None", 0, 20)
     return Item("Riot Sheild", "Armor", "None", 0, 20)      
             
