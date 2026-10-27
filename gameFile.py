@@ -7,18 +7,33 @@ import math
 
 visitedBase = lootedBaseKitchen = lootedBaseLivingRoom = lootedBaseBedroom = lootedBaseBathroom = leftTrailer = lootedTrailerCabinets = lootedTrailerLoft = lootedHospitalBreakRoom = lootedPoliceLockerRoom = lootedPoliceArmory = lootedHospitalReceptionRooom = False
 lootedTrailerBathroom = lootedPlaygroundMonkeyGym = lootedPlaygroundSandbox = leftSuburbs = lootedSuburbsKitchen = lootedSuburbsLivingRoom = lootedSuburbsMasterBedroom = lootedSuburbsBedroom = lootedSuburbsBathroom = suburbsBathroomIndex = False
-kitchen, livingRoom, bedroom, bathroom, trailerCabinets, trailerBedroom, trailerBathroom, monkeyGym, sandbox, suburbsKitchen, suburbsLivingRoom, suburbsMasterBedroom, suburbsBedroom, lootedBedroomCounter,lootedBathroomCounter, lockerRoom= ([] for i in range(16))
 trailerCounter = suburbsCounter = 0
+kitchen = ([] for i in range(16))
+livingRoom = ([] for i in range(16))
+bedroom =  ([] for i in range(16))
+bathroom =  ([] for i in range(16))
+trailerCabinets = ([] for i in range(16))
+trailerBedroom = ([] for i in range(16))
+trailerBathroom = ([] for i in range(16))
+monkeyGym = ([] for i in range(16))
+sandbox = ([] for i in range(16))
+suburbsKitchen = ([] for i in range(16))
+suburbsLivingRoom = ([] for i in range(16))
+suburbsMasterBedroom = ([] for i in range(16)) 
+suburbsBedroom = ([] for i in range(16))
+lootedBedroomCounter = ([] for i in range(16)) 
+lootedBathroomCounter = ([] for i in range(16))
+lockerRoom = ([] for i in range(16))
 suburbsBedroomCounter = random.randint(1, 4)
 suburbsBathroomCounter = random.randint(1, 3)
-inventory = equipedArmor = {}
+inventory = {}
+equipedArmor = {}
 health = 500
 zombieNumber = random.randint(200, 350)
 equipedWeapon = None
 random.seed()
 
 class bcolors:
-    
     OKBLUE = '\033[94m'
     WARNING = '\033[93m'
     FAIL = '\033[91m'
@@ -53,22 +68,19 @@ def equipItem():
     try:
         itemIndex = int(input(f"Which item do you want to equip?"))
     except ValueError:
-        return equipedWeapon, equipedArmor
+        print("You have no items to equip.")
     if itemIndex < len(inventory):
         keys = list(inventory.keys())
         itemKey = keys[itemIndex]
         if inventory[itemKey].type == "Weapon" and not equipedWeapon:
             print(f"You have equipped {inventory[itemKey].name}")
             equipedWeapon = inventory[itemKey]
-            return equipedWeapon, equipedArmor
         if inventory[itemKey].type == "Armor" and inventory[itemKey] not in equipedArmor:
             print(f"{bcolors.FAIL}DEBUG ARMOR{bcolors.ENDC}")
             print(f"You have equipped {inventory[itemKey]}")
             equipedArmor.update({inventory[itemKey].name: inventory[itemKey]})
-            return equipedWeapon, equipedArmor
         else:
             print(f"You cannot equip {inventory[itemKey]}")
-            return equipedWeapon, equipedArmor
 
 #loots the location and adds it to the inventory
 def looting(lootTable):
@@ -143,8 +155,8 @@ def lootElectronics(randNum):
 #loot for class sheets. 4 means sheets
 def lootSheets(randNum):
     if randNum < 0.7:
-        return ("Pillow", "Sheets", "None", 0, 0)
-    return ("Blanket", "Sheets", "None", 0, 0)
+        return Item("Pillow", "Sheets", "None", 0, 0)
+    return Item("Blanket", "Sheets", "None", 0, 0)
 
 #loot for class cleaning supplies. 5 means cleaning supplies
 def lootCleaningSupplies(randNum):
@@ -1141,9 +1153,9 @@ class Location:
 #                               Main Game Loop                                  #
 #-------------------------------------------------------------------------------#
 def main():
-    global equipedWeapon, equipedArmor
+    global equipedWeapon, equipedArmor, inventory
     location = "base"
-    equipedWeapon = Item("DEBUG WEAPON", 2, 9999, "Slash", 0)
+    #equipedWeapon = Item("DEBUG WEAPON", 2, 9999, "Slash", 0)
     print(f"{bcolors.OKBLUE}It's the zombie apocalypse, you are low on food. You will need to venture outside soon.{bcolors.ENDC}")    
     while True:
         if health <= 0:
@@ -1165,7 +1177,7 @@ def main():
         if command == "e" or command == "equip":
             for i, item in enumerate(inventory):
                 print(f"{i+1}. {item}")
-            equipedWeapon, equipedArmor = equipItem(inventory, equipedArmor, equipedWeapon)
+            equipItem()
         if command == "" or command == " ":
             pass
         #create location handler and update location
@@ -1173,11 +1185,13 @@ def main():
         location = lochandler()
     print(f"{bcolors.OKBLUE}Final inventory:{bcolors.ENDC}")
     for item in inventory:
-         print(f"{item}: {inventory[item].quantity}")
+        print(f"{item}: {inventory[item].quantity}")
     try:
-         print(f"Equiped Weapon: {equipedWeapon}")
+        print(f"Equiped Weapon: {equipedWeapon}")
     except AttributeError:
-         print("No equipped Weapon")
+        print("No equipped Weapon")
+    for item in equipedArmor:
+        print(f"Equiped Armor: {item}")
     print(f"{bcolors.OKBLUE}Final Zombie Count {zombieNumber}{bcolors.ENDC}")
 
 if __name__ == "__main__":
