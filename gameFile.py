@@ -27,10 +27,11 @@ lockerRoom = ([] for i in range(16))
 suburbsBedroomCounter = random.randint(1, 4)
 suburbsBathroomCounter = random.randint(1, 3)
 inventory = {}
-equipedArmor = {}
+equippedArmor = {}
 health = 500
+hygiene = hunger = sleep = 100
 zombieNumber = random.randint(200, 350)
-equipedWeapon = None
+equippedWeapon = None
 random.seed()
 
 class bcolors:
@@ -64,7 +65,7 @@ def removeInventory(item, quant):
 
 #equips something from the inventory onto the player
 def equipItem():
-    global inventory, equipedArmor, equipedWeapon
+    global inventory, equippedArmor, equippedWeapon
     try:
         itemIndex = int(input(f"Which item do you want to equip?"))
     except ValueError:
@@ -72,15 +73,15 @@ def equipItem():
     if itemIndex < len(inventory):
         keys = list(inventory.keys())
         itemKey = keys[itemIndex]
-        if inventory[itemKey].type == "Weapon" and not equipedWeapon:
+        if inventory[itemKey].type == "Weapon" and not equippedWeapon:
             print(f"You have equipped {inventory[itemKey].name}")
-            equipedWeapon = inventory[itemKey]
-        if inventory[itemKey].type == "Armor" and inventory[itemKey] not in equipedArmor:
+            equippedWeapon = inventory[itemKey]
+        if inventory[itemKey].type == "Armor" and inventory[itemKey] not in equippedArmor:
             print(f"{bcolors.FAIL}DEBUG ARMOR{bcolors.ENDC}")
             print(f"You have equipped {inventory[itemKey]}")
-            equipedArmor.update({inventory[itemKey].name: inventory[itemKey]})
+            equippedArmor.update({inventory[itemKey].name: inventory[itemKey]})
         else:
-            print(f"You cannot equip {inventory[itemKey]}")
+            print(f"You cannot equip {inventory[itemKey].name}")
 
 #loots the location and adds it to the inventory
 def looting(lootTable):
@@ -180,7 +181,7 @@ def lootWeapons(randNum):
         return Item("Baseball Bat", "Weapon", "Blunt", 25, 0)
     if randNum < 0.8:
         return Item("Crowbar", "Weapon", "Blunt", 35, 0)
-    return Item("Machete", "Weapon", "Blunt", 50, 0)
+    return Item("Machete", "Weapon", "Slash", 50, 0)
 
 #loot for class shovels. Offshoot of weapons
 def lootShovels(randNum):
@@ -198,7 +199,7 @@ def lootToys(randNum):
         return Item("Toy Car", "Toy", "None", 0, 0)
     if randNum < 0.8:
         return Item("Rubiks Cube", "Toy", "None", 0, 0)
-    return Item("Baseball Bat", "Weapon", "None", 25, 0)
+    return Item("Baseball Bat", "Weapon", "Blunt", 25, 0)
 
 #loot for backpacks. 9 means backpacks
 def lootBackpacks(randNum):
@@ -237,7 +238,7 @@ def lootArmor(randNum):
         return Item("Bullet Proof Vest", "Armor", "None", 0, 30)
     if randNum < 0.8:
         return Item("Riot Helmet", "Armor", "None", 0, 20)
-    return Item("Riot Sheild", "Armor", "None", 0, 20)      
+    return Item("Riot Shield", "Armor", "None", 0, 20)      
             
 #Loot table for different areas
 def lootTable(area):
@@ -296,9 +297,7 @@ def lootTable(area):
             return lootToys(randItem)
         if randNum < 0.85:
             return lootBackpacks(randItem)
-        if randNum < 0.95:
-            return lootStationary(randItem)
-        return None
+        return lootStationary(randItem)
     elif area == "reception":
         if randNum < 0.9:
             return lootStationary(randItem)
@@ -385,20 +384,20 @@ def ZombieGroup(difficulty):
 #                               Fighting Loop                                   #
 #-------------------------------------------------------------------------------#
 
-def useWeapon(equipedWeapon):
-    if not equipedWeapon:
+def useWeapon(equippedWeapon):
+    if not equippedWeapon:
         print("You punch the Zombie")
         damage = 5 - random.randint(0, 2)
         print(f"You do {damage} damage")
         return damage
-    if equipedWeapon.damageType == "Slash":
+    if equippedWeapon.damageType == "Slash":
         print("You slash at the Zombie")
-        damage = equipedWeapon.damage - random.randint(0, (math.floor(equipedWeapon.damage / 2)))
+        damage = equippedWeapon.damage - random.randint(0, (math.floor(equippedWeapon.damage / 2)))
         print(f"You do {damage} damage")
         return damage
-    if equipedWeapon.damageType == "Blunt":
+    if equippedWeapon.damageType == "Blunt":
         print("You bludgeon the Zombie")
-        damage = equipedWeapon.damage - random.randint(0, (math.floor(equipedWeapon.damage / 2)))
+        damage = equippedWeapon.damage - random.randint(0, (math.floor(equippedWeapon.damage / 2)))
         print(f"You do {damage} damage")
         return damage
     else:
@@ -414,12 +413,12 @@ def damage(difficulty):
         return random.randint(20, 60)
 
 def fightingMiniGame(difficulty, zombieGroup):
-    global health, zombieNumber, equipedWeapon, equipedArmor
+    global health, zombieNumber, equippedWeapon, equippedArmor
     while (health > 0 and zombieGroup):
         printDamage = []
         block = 0
-        for i in equipedArmor:
-            block += equipedArmor[i].protection
+        for i in equippedArmor:
+            block += equippedArmor[i].protection
         print(f"You have {health} health left.")
         print(f"There are {len(zombieGroup)} zombies left.")
         for i in range(len(zombieGroup)):
@@ -442,7 +441,7 @@ def fightingMiniGame(difficulty, zombieGroup):
             except ValueError:
                 print("No Zombie Selected.")
                 return
-            zombieGroup[command]["health"] -= useWeapon(equipedWeapon)
+            zombieGroup[command]["health"] -= useWeapon(equippedWeapon)
             print(f"Zombie has {zombieGroup[command]["health"]}")
             if zombieGroup[command]["health"] <= 0:
                 zombieNumber -= 1
@@ -453,11 +452,11 @@ def fightingMiniGame(difficulty, zombieGroup):
                 if random.random() > 0.8:
                     escape = False
             if escape == True:
-                print("You manage to excape.")
+                print("You manage to escape.")
                 zombieGroup.clear()
                 return
             else:
-                print("You can't excape.")
+                print("You can't escape.")
         elif command == "3":
             print(printDamage)
             for i in range(len(printDamage)):
@@ -697,7 +696,7 @@ class Location:
             return "park"
         elif desination == "2":
             print(f"{bcolors.OKBLUE}You find:{bcolors.ENDC}")
-            looting([ lootTable("trails"), lootTable("trails"), lootTable("trails")])
+            ([lootTable("trails"), lootTable("trails"), lootTable("trails")])
             return "pavilion"
         elif desination == "3":
             print(f"{bcolors.FAIL} FINISH COOKING LATER {bcolors.ENDC}")
@@ -705,6 +704,7 @@ class Location:
         return "pavilion"
 
     def trailerPark():
+        global trailerCOunter
         if random.random() < 0.1:
             fightingMiniGame("easy", ZombieGroup("easy"))
         print(f"{bcolors.OKBLUE}You are in the trailer park.{bcolors.ENDC}")
@@ -1153,9 +1153,9 @@ class Location:
 #                               Main Game Loop                                  #
 #-------------------------------------------------------------------------------#
 def main():
-    global equipedWeapon, equipedArmor, inventory
+    global equippedWeapon, equippedArmor, inventory
     location = "base"
-    #equipedWeapon = Item("DEBUG WEAPON", 2, 9999, "Slash", 0)
+    #equippedWeapon = Item("DEBUG WEAPON", 2, 9999, "Slash", 0)
     print(f"{bcolors.OKBLUE}It's the zombie apocalypse, you are low on food. You will need to venture outside soon.{bcolors.ENDC}")    
     while True:
         if health <= 0:
@@ -1169,10 +1169,10 @@ def main():
             for item in inventory:
                 print(f"{item}: {inventory[item].quantity}")
             try: 
-                print(f"Equiped Weapon: {equipedWeapon.name}")
+                print(f"Equiped Weapon: {equippedWeapon.name}")
             except AttributeError:
                 print("No equipped Weapon")
-            for item in equipedArmor:
+            for item in equippedArmor:
                 print(f"Equiped Armor: {item}")
         if command == "e" or command == "equip":
             for i, item in enumerate(inventory):
@@ -1187,10 +1187,10 @@ def main():
     for item in inventory:
         print(f"{item}: {inventory[item].quantity}")
     try:
-        print(f"Equiped Weapon: {equipedWeapon}")
+        print(f"Equiped Weapon: {equippedWeapon}")
     except AttributeError:
         print("No equipped Weapon")
-    for item in equipedArmor:
+    for item in equippedArmor:
         print(f"Equiped Armor: {item}")
     print(f"{bcolors.OKBLUE}Final Zombie Count {zombieNumber}{bcolors.ENDC}")
 
