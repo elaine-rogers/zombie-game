@@ -550,6 +550,7 @@ class Location:
             if not lootedBaseKitchen:
                 lootedBaseKitchen = True
                 kitchen = [lootTable("kitchen"), lootTable("kitchen"), lootTable("kitchen")]
+                minutes += 3
             looting(kitchen)
             return "baseKitchen"
         elif desination == "3":
@@ -558,7 +559,7 @@ class Location:
         return "baseKitchen"
         
     def baseLivingRoom():
-        global inventory, lootedBaseLivingRoom
+        global inventory, lootedBaseLivingRoom, minutes
         print(f"{bcolors.OKBLUE}You are in the living room.{bcolors.ENDC}")
         print("1. Go back to the hallway")
         print("2. Search the living room")
@@ -572,6 +573,7 @@ class Location:
             if not lootedBaseLivingRoom:
                 lootedBaseLivingRoom = True
                 livingRoom = [lootTable("baseLivingRoom"), lootTable("baseLivingRoom")]
+                minutes += 3
             looting(livingRoom)
             return "baseLivingRoom"
         elif desination == "3":
@@ -580,7 +582,7 @@ class Location:
         return "baseLivingRoom"
         
     def baseBedroom():
-        global lootedBaseBedroom
+        global lootedBaseBedroom, minutes
         print(f"{bcolors.OKBLUE}You are in the bedroom.{bcolors.ENDC}")
         print("1. Go back to the hallway")
         print("2. Search the bedroom")
@@ -594,6 +596,7 @@ class Location:
             if not lootedBaseBedroom:
                 lootedBaseBedroom = True
                 bedroom = [lootTable("bedroom"), lootTable("bedroom"), lootTable("bedroom")]
+                minutes += 3
             looting(bedroom)
             return "baseBedroom"
         elif desination == "3":
@@ -602,7 +605,7 @@ class Location:
         return "baseBedroom"
 
     def baseBathroom():
-        global lootedBaseBathroom
+        global lootedBaseBathroom, minutes
         print(f"{bcolors.OKBLUE}You are in the bathroom.{bcolors.ENDC}")
         print("1. Go back to the hallway")
         print("2. Search the bathroom")
@@ -616,6 +619,7 @@ class Location:
             if not lootedBaseBathroom:
                 lootedBaseBathroom = True
                 bathroom = [lootTable("bathroom"), lootTable("bathroom")]
+                minutes += 3
             looting(bathroom)
             return "baseBathroom"
         elif desination == "3":
@@ -688,7 +692,7 @@ class Location:
         return "playground"
 
     def trails():
-        global inventory
+        global inventory, minutes
         if random.random() < 0.1:
             fightingMiniGame("easy", ZombieGroup("easy"))
         print(f"{bcolors.OKBLUE}You are on the trails.{bcolors.ENDC}")
@@ -707,6 +711,7 @@ class Location:
         return "trails"
 
     def pavilion():
+        global minutes
         if random.random() < 0.1:
             fightingMiniGame("easy", ZombieGroup("easy"))
         print(f"{bcolors.OKBLUE}You are in the pavilion.{bcolors.ENDC}")
@@ -729,7 +734,7 @@ class Location:
         return "pavilion"
 
     def trailerPark():
-        global trailerCounter
+        global trailerCounter, minutes
         if random.random() < 0.1:
             fightingMiniGame("easy", ZombieGroup("easy"))
         print(f"{bcolors.OKBLUE}You are in the trailer park.{bcolors.ENDC}")
@@ -752,7 +757,7 @@ class Location:
         return "trailerPark"
 
     def trailerInside():
-        global inventory, leftTrailer, lootedTrailerCabinets, lootedTrailerLoft, lootedTrailerBathroom, leftTrailer
+        global inventory, leftTrailer, lootedTrailerCabinets, lootedTrailerLoft, lootedTrailerBathroom, leftTrailer, minutes
         if random.random() < 0.1:
             fightingMiniGame("easy", ZombieGroup("easy"))
         if lootedTrailerCabinets and lootedTrailerLoft and lootedTrailerBathroom and leftTrailer:
@@ -781,28 +786,29 @@ class Location:
             if not lootedTrailerCabinets:
                 lootedTrailerCabinets = True
                 trailerCabinets = [lootTable("trailerInsideCabinets"), lootTable("trailerInsideCabinets"), lootTable("trailerInsideCabinets")]
+                minutes += 3
             looting(trailerCabinets)
-            minutes += 5
             return "trailerInside"
         elif desination == "3":
             print(f"{bcolors.OKBLUE}You search the loft.{bcolors.ENDC}")
             if not lootedTrailerLoft:
                 lootedTrailerLoft = True
                 trailerBedroom = [lootTable("bedroom"), lootTable("bedroom"), lootTable("bedroom")]
+                minutes += 3
             looting(trailerBedroom)
-            minutes += 5
             return "trailerInside"
         elif desination == "4":
             print(f"{bcolors.OKBLUE}You search the bathroom.{bcolors.ENDC}")
             if not lootedTrailerBathroom:
                 lootedTrailerBathroom = True
                 trailerBathroom = [lootTable("bathroom"), lootTable("bathroom"), lootTable("bathroom")]
+                minutes += 3
             looting(trailerBathroom)
-            minutes += 5
             return "trailerInside"
         return "trailerInside"
 
     def suburbs():
+        global minutes
         if random.random() < 0.1:
             fightingMiniGame("medium", ZombieGroup("medium"))
         print(f"{bcolors.OKBLUE}You are in the suburbs.{bcolors.ENDC}")
@@ -835,7 +841,7 @@ class Location:
         return "suburbs"
 
     def suburbsInside():
-        global lootedSuburbsKitchen, lootedSuburbsLivingRoom, lootedSuburbsMasterBedroom, lootedSuburbsBedroom, lootedSuburbsBathroom, leftSuburbs, suburbsBedroomCounter, suburbsBathroomCounter
+        global lootedSuburbsKitchen, lootedSuburbsLivingRoom, lootedSuburbsMasterBedroom, lootedSuburbsBedroom, lootedSuburbsBathroom, leftSuburbs, suburbsBedroomCounter, suburbsBathroomCounter, minutes
         if(lootedSuburbsKitchen and lootedSuburbsLivingRoom and lootedSuburbsMasterBedroom and lootedSuburbsBedroom and lootedSuburbsBathroom and leftSuburbs):
             suburbsCounter += 1
             lootedSuburbsKitchen = False
@@ -879,7 +885,7 @@ class Location:
         return "suburbsInside"
         
     def suburbsKitchen():
-        global inventory
+        global inventory, minutes
         if lootedSuburbsKitchen == False:
             if random.random() < 0.1:
                 fightingMiniGame("medium", ZombieGroup("medium"))
@@ -896,8 +902,8 @@ class Location:
             if not lootedSuburbsKitchen:
                 lootedSuburbsKitchen = True
                 suburbsKitchen = [lootTable("kitchen"), lootTable("kitchen"), lootTable("kitchen")]
+                minutes += 3
             looting(suburbsKitchen)
-            minutes += 3
             return "suburbsKitchen"
         elif desination == "3":
             print(f"{bcolors.FAIL} FINISH COOKING LATER {bcolors.ENDC}")
@@ -905,7 +911,7 @@ class Location:
         return "suburbsKitchen"
 
     def suburbsLivingRoom():
-        global inventory
+        global inventory, minutes
         if lootedSuburbsLivingRoom == False:
             if random.random() < 0.1:
                 fightingMiniGame("medium", ZombieGroup("medium"))
@@ -922,8 +928,8 @@ class Location:
             if not lootedSuburbsLivingRoom:
                 lootedSuburbsLivingRoom = True
                 suburbsLivingRoom = [lootTable("baseLivingRoom"), lootTable("baseLivingRoom")]
+                minutes += 3
             looting(suburbsLivingRoom)
-            minutes += 3
             return "suburbsLivingRoom"
         elif desination == "3":
             print(f"{bcolors.FAIL} FINISH WATCHING TV LATER {bcolors.ENDC}")
@@ -931,7 +937,7 @@ class Location:
         return "suburbsLivingRoom"
 
     def suburbsBedroom():
-        global inventory
+        global inventory, minutes
         if lootedSuburbsBedroom == False:
             if random.random() < 0.1:
                 fightingMiniGame("medium", ZombieGroup("medium"))
@@ -955,8 +961,8 @@ class Location:
             if not lootedSuburbsMasterBedroom:
                 lootedSuburbsMasterBedroom = True
                 suburbsMasterBedroom = [lootTable("bedroom"), lootTable("bedroom"), lootTable("bedroom")]
+                minutes += 3
             looting(suburbsMasterBedroom)
-            minutes += 3
             return "suburbsBedroom"
         elif desination >= "3":
             index = int(desination) - 3
@@ -965,8 +971,8 @@ class Location:
                 if not lootedSuburbsBedroom:
                     if lootedBedroomCounter[index] < 1:
                         suburbsBedroom = [lootTable("bedroom"), lootTable("bedroom"), lootTable("bedroom")]
+                        minutes += 3
                 increments = looting(suburbsBedroom)
-                minutes += 3
                 if increments != 1:
                     lootedBedroomCounter[index] += 1
             elif index == suburbsBedroomCounter:
@@ -974,7 +980,7 @@ class Location:
         return "suburbsBedroom"
 
     def suburbsBathroom():
-        global inventory, suburbsBathroomIndex
+        global inventory, suburbsBathroomIndex, minutes
         if lootedSuburbsBathroom == False:
             if random.random() < 0.1:
                 fightingMiniGame("medium", ZombieGroup("medium"))
@@ -996,10 +1002,10 @@ class Location:
             if index < suburbsBathroomCounter:
                 print(f"{bcolors.OKBLUE}You search bathroom {index+1}.{bcolors.ENDC}")
                 bathroom = []
-                minutes += 3
                 if not lootedSuburbsBathroom:
                     if lootedBathroomCounter[index] < 1:
                         bathroom = [lootTable("bathroom"), lootTable("bathroom"), lootTable("bathroom")]
+                        minutes += 3
                 if looting(bathroom) != "You take nothing.":
                     lootedBathroomCounter[index] += 1
                     return "suburbsBathroom"
@@ -1009,6 +1015,7 @@ class Location:
         return "suburbsBathroom"
 
     def hospital():
+        global minutes
         if random.random() < 0.1:
             fightingMiniGame("medium", ZombieGroup("medium"))
         print("You are in front of the hospital.")
@@ -1032,7 +1039,7 @@ class Location:
             return "hospital"
         
     def hospitalReception():
-        global inventory, lootedHospitalReceptionRooom
+        global inventory, lootedHospitalReceptionRooom, minutes
         if random.random() < 0.1:
             fightingMiniGame("medium", ZombieGroup("medium"))
         print("You are in the Hospital Reception Office.")
@@ -1055,13 +1062,13 @@ class Location:
             if lootedHospitalReceptionRooom == False:
                 reception = [lootTable("reception"), lootTable("reception"), lootTable("reception")]
                 lootedHospitalReceptionRooom = True
+                minutes += 3
             looting(reception)
-            minutes += 3
             return "hospitalReception"
         return "hospitalReception"
 
     def medicalRoom():
-        global inventory
+        global inventory, minutes
         if random.random() < 0.1:
                 fightingMiniGame("medium", ZombieGroup("medium"))
         print("You are in a Medical Room.")
@@ -1078,7 +1085,7 @@ class Location:
         return "medicalRoom"
 
     def breakRoom():
-        global inventory, lootedHospitalBreakRoom
+        global inventory, lootedHospitalBreakRoom, minutes
         if random.random() < 0.1:
                 fightingMiniGame("medium", ZombieGroup("medium"))
         print("You are in the Break Room.")
@@ -1091,12 +1098,13 @@ class Location:
         if desination == "2":
             if lootedHospitalBreakRoom == False:
                 breakRoom = [lootTable("breakRoom"), lootTable("breakRoom"), lootTable("breakRoom")]
+                minutes += 3
             looting(breakRoom)
-            minutes += 3
             return "breakRoom"
         return "breakRoom"
 
     def apartments(): 
+        global minutes
         if random.random() < 0.1:
                 fightingMiniGame("medium", ZombieGroup("medium"))
         print("You are in front of the Apartments.")
@@ -1117,7 +1125,7 @@ class Location:
             return "apartmentsInside"
         
     def apartmentsInside():
-        global inventory
+        global inventory, minutes
         print("You are inside the Apartment Complex.")
         print("1. Leave the Apartment Complex")
         print("2. Search an Apartment")
@@ -1134,6 +1142,7 @@ class Location:
         return "apartmentsInside"
 
     def policeStation():
+        global minutes
         print("You are in front of the Police Station.")
         print("1. Go to the Hospital")
         print("2. Go to the Apartments")
@@ -1153,6 +1162,7 @@ class Location:
             return "policeStationInside"
 
     def policeStationInside():
+        global minutes
         print("You are in the Police Station Reception Office")
         print("1. Leave the Police Station")
         print("2. Go to the Locker Room")
@@ -1170,7 +1180,7 @@ class Location:
             return "policeArmory"
 
     def policeLockerRoom():
-        global inventory, lootedPoliceLockerRoom
+        global inventory, lootedPoliceLockerRoom, minutes
         print("You are in the Locker Room.")
         print("1. Leave the Locker Room")
         print("2. Search the Locker Room")
@@ -1188,7 +1198,7 @@ class Location:
         return "policeLockerRoom"
 
     def policeArmory():
-        global inventory
+        global inventory, minutes
         print("You are in the Armory.")
         print("1. Leave the Armory")
         print("2. Search the Armory")
