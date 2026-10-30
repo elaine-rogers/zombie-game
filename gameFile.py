@@ -1232,7 +1232,11 @@ def main():
         else:
             print(f"Time is: {(hours) % 12}:{minutes}")
         print(f"Days survived: {days}")
-        print("\U0001F3E0")
+        print("   \U0001F683    \U0001F3E5")
+        print("  /  \\  /  \\")
+        print("\U0001F3E0    \U0001F3D8     \U0001F3E4")
+        print("  \\  /  \\  /")
+        print("   \U0001F332    \U0001F3E2")
         command = input(f"{bcolors.WARNING}Enter a command (q to quit, i for inventory, e to equip item, enter to continue):{bcolors.ENDC}").strip()
         if command == "q" or command == "quit":
             break
