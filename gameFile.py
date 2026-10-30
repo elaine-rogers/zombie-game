@@ -30,6 +30,9 @@ inventory = {}
 equippedArmor = {}
 health = 500
 hygiene = hunger = sleep = 100
+days = 0
+hours = 6
+minutes = 0
 zombieNumber = random.randint(200, 350)
 equippedWeapon = None
 random.seed()
@@ -85,7 +88,9 @@ def equipItem():
 
 #loots the location and adds it to the inventory
 def looting(lootTable):
-    global inventory
+    global inventory, minutes
+    minutes += 3
+    lootTable = [loot for loot in lootTable if loot]
     if len(lootTable) == 0:
             print("There is nothing to take")
             return 0
@@ -281,23 +286,25 @@ def lootTable(area):
     elif area == "trails":
         if randNum < 0.05:
             return lootFood(randItem)
-        if randNum < 0.15:
+        if randNum < 0.10:
             return lootKitchenUtensil(randItem)
-        if randNum < 0.25:
+        if randNum < 0.15:
             return lootElectronics(randItem)
-        if randNum < 0.35:
+        if randNum < 0.20:
             return lootSheets(randItem)
-        if randNum < 0.45:
+        if randNum < 0.25:
             return lootCleaningSupplies(randItem)
-        if randNum < 0.55:
+        if randNum < 0.30:
             return lootMedicalSupplies(randItem)
-        if randNum < 0.65:
+        if randNum < 0.35:
             return lootWeapons(randItem)
-        if randNum < 0.75:
+        if randNum < 0.40:
             return lootToys(randItem)
-        if randNum < 0.85:
+        if randNum < 0.45:
             return lootBackpacks(randItem)
-        return lootStationary(randItem)
+        if randNum < 0.50:
+            return lootStationary(randItem)
+        return None
     elif area == "reception":
         if randNum < 0.9:
             return lootStationary(randItem)
@@ -475,7 +482,7 @@ def fightingMiniGame(difficulty, zombieGroup):
 #-------------------------------------------------------------------------------#
 class Location:
     def base():
-        global visitedBase
+        global visitedBase, minutes
         if not visitedBase:
             print(f"{bcolors.OKBLUE}You are in a small cabin on the outskirts of town.{bcolors.ENDC}")
             visitedBase = True
@@ -488,6 +495,7 @@ class Location:
         desination = (input(f"{bcolors.WARNING}Where do you want to go?{bcolors.ENDC}"))
         if desination == "1":
             print(f"{bcolors.OKBLUE}You leave the base.{bcolors.ENDC}")
+            minutes += 5
             return "outsideBase"
         elif desination == "2":
             print(f"{bcolors.OKBLUE}You enter the kitchen.{bcolors.ENDC}")
@@ -504,6 +512,7 @@ class Location:
         return "base"
         
     def outsideBase():
+        global minutes 
         if random.random() < 0.1:
             fightingMiniGame("easy", ZombieGroup("easy"))
         print(f"{bcolors.OKBLUE}You are outside the base.{bcolors.ENDC}")
@@ -513,17 +522,20 @@ class Location:
         destination = input(f"{bcolors.WARNING}Where do you want to go?{bcolors.ENDC}")
         if destination == "1":
             print(f"{bcolors.OKBLUE}You go back to the base.{bcolors.ENDC}")
+            minutes += 5
             return "base"
         elif destination == "2":
             print(f"{bcolors.OKBLUE}You go to the Trailer Park.{bcolors.ENDC}")
+            minutes += 15
             return "trailerPark"
         elif destination == "3":
             print(f"{bcolors.OKBLUE}You go to the park.{bcolors.ENDC}")
+            minutes += 15
             return "park"
         return "outsideBase"
 
     def baseKitchen():
-        global inventory, lootedBaseKitchen
+        global inventory, lootedBaseKitchen, minutes
         kitchen = []
         print(f"{bcolors.OKBLUE}You are in the kitchen.{bcolors.ENDC}")
         print("1. Go back to the hallway")
@@ -612,6 +624,7 @@ class Location:
         return "baseBathroom"
 
     def park():
+        global minutes
         if random.random() < 0.1:
             fightingMiniGame("easy", ZombieGroup("easy"))
         print(f"{bcolors.OKBLUE}You are in the park.{bcolors.ENDC}")
@@ -623,23 +636,28 @@ class Location:
         desination = input(f"{bcolors.WARNING}What do you want to do?{bcolors.ENDC}")
         if desination == "1":
             print(f"{bcolors.OKBLUE}You go back to the base.{bcolors.ENDC}")
+            minutes += 15
             return "base"
         elif desination == "2":
             print(f"{bcolors.OKBLUE}You go to the suburbs.{bcolors.ENDC}")
+            minutes += 15
             return "suburbs"
         elif desination == "3":
             print(f"{bcolors.OKBLUE}You go to the playground.{bcolors.ENDC}")
+            minutes += 5
             return "playground"
         elif desination == "4":
             print(f"{bcolors.OKBLUE}You go to the trails.{bcolors.ENDC}")
+            minutes += 5
             return "trails"
         elif desination == "5":
             print(f"{bcolors.OKBLUE}You go to the pavilion.{bcolors.ENDC}")
+            minutes += 5
             return "pavilion"
         return "park"
         
     def playground():
-        global inventory, lootedPlaygroundMonkeyGym, lootedPlaygroundSandbox
+        global inventory, lootedPlaygroundMonkeyGym, lootedPlaygroundSandbox, minutes
         if random.random() < 0.1:
             fightingMiniGame("easy", ZombieGroup("easy"))
         print(f"{bcolors.OKBLUE}You are in the playground.{bcolors.ENDC}")
@@ -649,6 +667,7 @@ class Location:
         desination = input(f"{bcolors.WARNING}What do you want to do?{bcolors.ENDC}")
         if desination == "1":
             print(f"{bcolors.OKBLUE}You go back to the park.{bcolors.ENDC}")
+            minutes += 5
             return "park"
         elif desination == "2":
             print(f"{bcolors.OKBLUE}You go to the Jungle Gym.{bcolors.ENDC}")
@@ -656,6 +675,7 @@ class Location:
                 lootedPlaygroundMonkeyGym = True
                 monkeyGym = [lootTable("playgroundMonkeyGym"), lootTable("playgroundMonkeyGym")]
             looting(monkeyGym)
+            minutes += 5
             return "playground"
         elif desination == "3":
             print(f"{bcolors.OKBLUE}You go to the sandbox.{bcolors.ENDC}")
@@ -663,6 +683,7 @@ class Location:
                 lootedPlaygroundSandbox = True
                 sandbox = [lootTable("playgroundSandbox"), lootTable("playgroundSandbox")]
             looting(sandbox)
+            minutes += 5
             return "playground"
         return "playground"
 
@@ -676,10 +697,12 @@ class Location:
         desination = input(f"{bcolors.WARNING}What do you want to do?{bcolors.ENDC}")
         if desination == "1":
             print(f"{bcolors.OKBLUE}You go back to the park.{bcolors.ENDC}")
+            minutes += 5
             return "park"
         elif desination == "2":
             print(f"{bcolors.OKBLUE}You find:{bcolors.ENDC}")
             looting([lootTable("trails"), lootTable("trails"), lootTable("trails")])
+            minutes += 15
             return "trails"
         return "trails"
 
@@ -693,10 +716,12 @@ class Location:
         desination = input(f"{bcolors.WARNING}What do you want to do?{bcolors.ENDC}")
         if desination == "1":
             print(f"{bcolors.OKBLUE}You go back to the park.{bcolors.ENDC}")
+            minutes += 5
             return "park"
         elif desination == "2":
             print(f"{bcolors.OKBLUE}You find:{bcolors.ENDC}")
             ([lootTable("trails"), lootTable("trails"), lootTable("trails")])
+            minutes += 5
             return "pavilion"
         elif desination == "3":
             print(f"{bcolors.FAIL} FINISH COOKING LATER {bcolors.ENDC}")
@@ -704,7 +729,7 @@ class Location:
         return "pavilion"
 
     def trailerPark():
-        global trailerCOunter
+        global trailerCounter
         if random.random() < 0.1:
             fightingMiniGame("easy", ZombieGroup("easy"))
         print(f"{bcolors.OKBLUE}You are in the trailer park.{bcolors.ENDC}")
@@ -714,12 +739,15 @@ class Location:
         desination = input(f"{bcolors.WARNING}What do you want to do?{bcolors.ENDC}")
         if desination == "1":
             print(f"{bcolors.OKBLUE}You go back to the base.{bcolors.ENDC}")
+            minutes += 15
             return "base"
         elif desination == "2":
             print(f"{bcolors.OKBLUE}You go to the suburbs.{bcolors.ENDC}")
+            minutes += 15
             return "suburbs"
         elif desination == "3":
             print(f"{bcolors.OKBLUE}You search a trailer.{bcolors.ENDC}")
+            minutes += 5
             return "trailerInside"
         return "trailerPark"
 
@@ -746,6 +774,7 @@ class Location:
             print(f"{bcolors.OKBLUE}You leave the trailer.{bcolors.ENDC}")
             if lootedTrailerCabinets and lootedTrailerLoft and lootedTrailerBathroom:
                 leftTrailer = True
+            minutes += 5
             return "trailerPark"
         elif desination == "2":
             print(f"{bcolors.OKBLUE}You search the cabinets.{bcolors.ENDC}")
@@ -753,6 +782,7 @@ class Location:
                 lootedTrailerCabinets = True
                 trailerCabinets = [lootTable("trailerInsideCabinets"), lootTable("trailerInsideCabinets"), lootTable("trailerInsideCabinets")]
             looting(trailerCabinets)
+            minutes += 5
             return "trailerInside"
         elif desination == "3":
             print(f"{bcolors.OKBLUE}You search the loft.{bcolors.ENDC}")
@@ -760,6 +790,7 @@ class Location:
                 lootedTrailerLoft = True
                 trailerBedroom = [lootTable("bedroom"), lootTable("bedroom"), lootTable("bedroom")]
             looting(trailerBedroom)
+            minutes += 5
             return "trailerInside"
         elif desination == "4":
             print(f"{bcolors.OKBLUE}You search the bathroom.{bcolors.ENDC}")
@@ -767,6 +798,7 @@ class Location:
                 lootedTrailerBathroom = True
                 trailerBathroom = [lootTable("bathroom"), lootTable("bathroom"), lootTable("bathroom")]
             looting(trailerBathroom)
+            minutes += 5
             return "trailerInside"
         return "trailerInside"
 
@@ -782,25 +814,29 @@ class Location:
         desination = input(f"{bcolors.WARNING}What do you want to do?{bcolors.ENDC}")
         if desination == "1":
             print(f"{bcolors.OKBLUE}You go to the trailer park.{bcolors.ENDC}")
+            minutes += 15
             return "trailerPark"
         elif desination == "2":
             print(f"{bcolors.OKBLUE}You go to the park.{bcolors.ENDC}")
+            minutes += 15
             return "park"
         elif desination == "3":
             print(f"{bcolors.OKBLUE}You go to the hospital.{bcolors.ENDC}")
+            minutes += 15
             return "hospital"
         elif desination == "4":
             print(f"{bcolors.OKBLUE}You go to the apartments.{bcolors.ENDC}")
+            minutes += 15
             return "apartments"
         elif desination == "5":
             print(f"{bcolors.OKBLUE}You search a house.{bcolors.ENDC}")
+            minutes += 5
             return "suburbsInside"
         return "suburbs"
 
     def suburbsInside():
         global lootedSuburbsKitchen, lootedSuburbsLivingRoom, lootedSuburbsMasterBedroom, lootedSuburbsBedroom, lootedSuburbsBathroom, leftSuburbs, suburbsBedroomCounter, suburbsBathroomCounter
-        if(lootedSuburbsKitchen and lootedSuburbsLivingRoom and lootedSuburbsMasterBedroom 
-        and lootedSuburbsBedroom and lootedSuburbsBathroom and leftSuburbs):
+        if(lootedSuburbsKitchen and lootedSuburbsLivingRoom and lootedSuburbsMasterBedroom and lootedSuburbsBedroom and lootedSuburbsBathroom and leftSuburbs):
             suburbsCounter += 1
             lootedSuburbsKitchen = False
             lootedSuburbsLivingRoom = False
@@ -826,6 +862,7 @@ class Location:
             print(f"{bcolors.OKBLUE}You leave the house.{bcolors.ENDC}")
             if lootedSuburbsKitchen and lootedSuburbsLivingRoom and lootedSuburbsBedroom and lootedSuburbsBathroom:
                 leftSuburbs = True
+            minutes += 5
             return "suburbs"
         elif desination == "2":
             print(f"{bcolors.OKBLUE}You search the kitchen.{bcolors.ENDC}")
@@ -860,6 +897,7 @@ class Location:
                 lootedSuburbsKitchen = True
                 suburbsKitchen = [lootTable("kitchen"), lootTable("kitchen"), lootTable("kitchen")]
             looting(suburbsKitchen)
+            minutes += 3
             return "suburbsKitchen"
         elif desination == "3":
             print(f"{bcolors.FAIL} FINISH COOKING LATER {bcolors.ENDC}")
@@ -885,6 +923,7 @@ class Location:
                 lootedSuburbsLivingRoom = True
                 suburbsLivingRoom = [lootTable("baseLivingRoom"), lootTable("baseLivingRoom")]
             looting(suburbsLivingRoom)
+            minutes += 3
             return "suburbsLivingRoom"
         elif desination == "3":
             print(f"{bcolors.FAIL} FINISH WATCHING TV LATER {bcolors.ENDC}")
@@ -917,6 +956,7 @@ class Location:
                 lootedSuburbsMasterBedroom = True
                 suburbsMasterBedroom = [lootTable("bedroom"), lootTable("bedroom"), lootTable("bedroom")]
             looting(suburbsMasterBedroom)
+            minutes += 3
             return "suburbsBedroom"
         elif desination >= "3":
             index = int(desination) - 3
@@ -926,6 +966,7 @@ class Location:
                     if lootedBedroomCounter[index] < 1:
                         suburbsBedroom = [lootTable("bedroom"), lootTable("bedroom"), lootTable("bedroom")]
                 increments = looting(suburbsBedroom)
+                minutes += 3
                 if increments != 1:
                     lootedBedroomCounter[index] += 1
             elif index == suburbsBedroomCounter:
@@ -955,6 +996,7 @@ class Location:
             if index < suburbsBathroomCounter:
                 print(f"{bcolors.OKBLUE}You search bathroom {index+1}.{bcolors.ENDC}")
                 bathroom = []
+                minutes += 3
                 if not lootedSuburbsBathroom:
                     if lootedBathroomCounter[index] < 1:
                         bathroom = [lootTable("bathroom"), lootTable("bathroom"), lootTable("bathroom")]
@@ -976,12 +1018,15 @@ class Location:
         desination = input(f"{bcolors.WARNING}What do you want to do?{bcolors.ENDC}")
         if desination == "1":
             print("You go to the Suburbs")
+            minutes += 15
             return "suburbs"
         elif desination == "2":
             print("You go to the Police Station")
+            minutes += 15
             return "policeStation"
         elif desination == "3":
             print("You go inside the Hospital")
+            minutes += 5
             return "hospitalReception"
         else:
             return "hospital"
@@ -989,7 +1034,7 @@ class Location:
     def hospitalReception():
         global inventory, lootedHospitalReceptionRooom
         if random.random() < 0.1:
-                fightingMiniGame("medium", ZombieGroup("medium"))
+            fightingMiniGame("medium", ZombieGroup("medium"))
         print("You are in the Hospital Reception Office.")
         print("1. Leave the Hospital ")
         print("2. Go to a Medical Room")
@@ -998,6 +1043,7 @@ class Location:
         desination = input(f"{bcolors.WARNING}What do you want to do?{bcolors.ENDC}")
         if desination == "1":
             print("You leave the hospital.")
+            minutes += 5
             return "hospital"
         if desination == "2":
             print("You enter a Medical Room.")
@@ -1010,6 +1056,7 @@ class Location:
                 reception = [lootTable("reception"), lootTable("reception"), lootTable("reception")]
                 lootedHospitalReceptionRooom = True
             looting(reception)
+            minutes += 3
             return "hospitalReception"
         return "hospitalReception"
 
@@ -1026,6 +1073,7 @@ class Location:
             return "hospital"
         if desination == "2":
             looting([lootTable("medicalRoom"), lootTable("medicalRoom"), lootTable("medicalRoom")])
+            minutes += 3
             return "medicalRoom"
         return "medicalRoom"
 
@@ -1044,6 +1092,7 @@ class Location:
             if lootedHospitalBreakRoom == False:
                 breakRoom = [lootTable("breakRoom"), lootTable("breakRoom"), lootTable("breakRoom")]
             looting(breakRoom)
+            minutes += 3
             return "breakRoom"
         return "breakRoom"
 
@@ -1057,11 +1106,14 @@ class Location:
         desination = input(f"{bcolors.WARNING}What do you want to do?{bcolors.ENDC}")
         if desination == "1":
             print("You go to the Suburbs")
+            minutes += 15
             return "suburbs"
         if desination == "2":
             print("You go to the Police Station.")
+            minutes += 15
             return "policeStation"
         if desination == "3":
+            minutes += 5
             return "apartmentsInside"
         
     def apartmentsInside():
@@ -1072,10 +1124,12 @@ class Location:
         desination = input(f"{bcolors.WARNING}What do you want to do?{bcolors.ENDC}")
         if desination == "1":
             print("You leave the Apartment Complex.")
+            minutes += 5
             return "apartments"
         if desination == "2":
             print("You search an Apartment.")
             looting([lootTable("apartment"), lootTable("apartment"), lootTable("apartment")])
+            minutes += 10
             return "apartmentsInside"
         return "apartmentsInside"
 
@@ -1087,12 +1141,15 @@ class Location:
         desination = input(f"{bcolors.WARNING}What do you want to do?{bcolors.ENDC}")
         if desination == "1":
             print("You go to the Hospital.")
+            minutes += 15
             return "hospital"
         if desination == "2":
             print("You go to the Apartments.")
+            minutes += 15
             return "apartments"
         if desination == "3":
             print("You go inside the Police Station.")
+            minutes += 5
             return "policeStationInside"
 
     def policeStationInside():
@@ -1103,6 +1160,7 @@ class Location:
         desination = input(f"{bcolors.WARNING}What do you want to do?{bcolors.ENDC}")
         if desination == "1":
             print("You leave the Police Station.")
+            minutes += 5
             return "policeStation"
         if desination == "2":
             print("You go to the Locker Room.")
@@ -1125,6 +1183,7 @@ class Location:
                 lockerRoom = [lootTable("policeLockerRoom"), lootTable("policeLockerRoom"), lootTable("policeLockerRoom")]
                 lootedPoliceLockerRoom = True
             looting(lockerRoom)
+            minutes += 3
             return "policeLockerRoom"
         return "policeLockerRoom"
 
@@ -1139,6 +1198,7 @@ class Location:
             return "policeStationInside"
         if desination == "2":
             looting([lootTable("policeArmory"), lootTable("policeArmory"), lootTable("policeArmory")])
+            minutes += 3
             return "policeArmory"
         return "policeArmory"
 
@@ -1153,7 +1213,7 @@ class Location:
 #                               Main Game Loop                                  #
 #-------------------------------------------------------------------------------#
 def main():
-    global equippedWeapon, equippedArmor, inventory
+    global equippedWeapon, equippedArmor, inventory, days, hours, minutes
     location = "base"
     #equippedWeapon = Item("DEBUG WEAPON", 2, 9999, "Slash", 0)
     print(f"{bcolors.OKBLUE}It's the zombie apocalypse, you are low on food. You will need to venture outside soon.{bcolors.ENDC}")    
@@ -1161,6 +1221,17 @@ def main():
         if health <= 0:
             print("You die")
             break
+        if hours >= 24:
+            hours = hours % 24
+            days += 1
+        if minutes >= 60:
+            minutes = minutes % 60
+            hours += 1
+        if minutes < 10:
+            print(f"Time is: {(hours) % 12}:0{minutes}")
+        else:
+            print(f"Time is: {(hours) % 12}:{minutes}")
+        print(f"Days survived: {days}")
         command = input(f"{bcolors.WARNING}Enter a command (q to quit, i for inventory, e to equip item, enter to continue):{bcolors.ENDC}").strip()
         if command == "q" or command == "quit":
             break
@@ -1178,8 +1249,6 @@ def main():
             for i, item in enumerate(inventory):
                 print(f"{i+1}. {item}")
             equipItem()
-        if command == "" or command == " ":
-            pass
         #create location handler and update location
         lochandler = getattr(Location, location)
         location = lochandler()

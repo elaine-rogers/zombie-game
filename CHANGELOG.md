@@ -1,4 +1,8 @@
 # Change Log
+## Version 0.1.1
+- added time to the game
+- small bugfixes
+
 ## Version 0.1
 - can loot items
 - random encounters with a random amount of zombies 
